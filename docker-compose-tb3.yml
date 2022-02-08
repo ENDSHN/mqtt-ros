@@ -6,7 +6,7 @@ services:
       dockerfile: Dockerfile_MQTT_ROS
     environment:
       - ROS_MASTER_URI=http://ros-master:11311
-      - MQTT_BROKER_ADDRESS=tcp://emqx_broker:1883
+      - MQTT_BROKER_ADDRESS=tcp://127.0.0.1:1883
       - CONFIG_FILE=config_robot.yaml
       - ROBOT_NAME=tb3
     depends_on:
