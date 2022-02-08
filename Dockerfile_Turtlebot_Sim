@@ -1,0 +1,27 @@
+# Base using ros-noetic-ros-base
+FROM ros:noetic-ros-base
+
+# Update and install packages
+RUN apt-get update && apt-get install --no-install-recommends -y
+
+# Install required applications
+RUN apt-get install git -y
+
+# Get Turtlebot 3 Simulator and build everything
+RUN apt-get install ros-noetic-dynamixel-sdk ros-noetic-turtlebot3-msgs ros-noetic-turtlebot3 -y
+RUN mkdir -p /catkin_ws/src/
+WORKDIR /catkin_ws/src/
+RUN git clone --depth=1 -b noetic-devel https://github.com/ROBOTIS-GIT/turtlebot3_simulations.git
+RUN rm -r /catkin_ws/src/turtlebot3_simulations/turtlebot3_gazebo
+
+# Set environment variables
+ENV TURTLEBOT3_MODEL=burger
+
+# Compile everything
+WORKDIR /catkin_ws/
+RUN /bin/bash -c "source /opt/ros/noetic/setup.bash && catkin_make install -j8 -l8 -DCMAKE_INSTALL_PREFIX=/opt/ros/noetic/"
+
+# Start the environment
+COPY entrypoint_turtlebot_sim.sh /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["bash"]

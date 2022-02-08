@@ -1,0 +1,9 @@
+<launch>
+    <arg name="robot_name" default="robot" />
+    <param name="mqtt_ros/robot_name" value="$(arg robot_name)"/>
+    <arg name="mqtt_broker_address" default="tcp://127.0.0.1:1883" />
+    <param name="mqtt_ros/mqtt_broker_address" value="$(arg mqtt_broker_address)" />
+    <arg name="config_file" default="config.yaml" />
+    <param name="mqtt_ros/config_file" value="$(arg config_file)" />
+    <node name="mqtt_ros_node" pkg="mqtt_ros" type="main" output="screen" />
+</launch>

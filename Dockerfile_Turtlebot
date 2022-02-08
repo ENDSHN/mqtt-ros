@@ -1,0 +1,16 @@
+# Base using ros-noetic-ros-base
+FROM ros:noetic-ros-base
+
+# Update and install packages
+RUN apt-get update && apt-get install --no-install-recommends -y
+
+# Get Turtlebot 3 packages
+RUN apt-get install ros-noetic-dynamixel-sdk ros-noetic-turtlebot3-msgs ros-noetic-turtlebot3 -y
+
+# Set environment variables
+ENV TURTLEBOT3_MODEL=burger
+
+# Start the environment
+COPY entrypoint_turtlebot.sh /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["bash"]

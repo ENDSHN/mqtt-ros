@@ -1,0 +1,8 @@
+output_topics: ["/cmd_vel"]
+input_topics:
+  - name: "/scan"
+    type: "geometry_msgs/Twist"
+  - name: "/odom"
+    type: "nav_msgs/Odometry"
+  - name: "/joint_states"
+    type: "sensor_msgs/JointState"

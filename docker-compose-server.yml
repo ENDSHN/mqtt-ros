@@ -1,0 +1,17 @@
+version: "3.7"
+services:
+  mqtt-ros:
+    build:
+      context: .
+      dockerfile: Dockerfile_MQTT_ROS
+    environment:
+      - ROS_MASTER_URI=http://ros-master:11311
+      - MQTT_BROKER_ADDRESS=tcp://192.168.1.46:1883
+      - CONFIG_FILE=config_server.yaml
+      - ROBOT_NAME=tb3
+    depends_on:
+      - ros-master
+  ros-master:
+    image: ros:noetic-ros-core
+    command:
+      - roscore

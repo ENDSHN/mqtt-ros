@@ -1,0 +1,25 @@
+version: "3.7"
+services:
+  mqtt-ros:
+    build:
+      context: .
+      dockerfile: Dockerfile_MQTT_ROS
+    environment:
+      - ROS_MASTER_URI=http://ros-master:11311
+      - MQTT_BROKER_ADDRESS=tcp://emqx_broker:1883
+      - CONFIG_FILE=config_robot.yaml
+      - ROBOT_NAME=tb3
+    depends_on:
+      - robot
+  robot:
+    build:
+      context: .
+      dockerfile: Dockerfile_Turtlebot
+    environment:
+      - ROS_MASTER_URI=http://ros-master:11311
+    depends_on:
+      - ros-master
+  ros-master:
+    image: ros:noetic-ros-core
+    command:
+      - roscore
