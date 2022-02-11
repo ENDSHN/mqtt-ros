@@ -1,0 +1,53 @@
+version: "3.7"
+services:
+  mqtt-ros-robot:
+    build:
+      context: .
+      dockerfile: Dockerfile_MQTT_ROS
+    tty: true
+    environment:
+      - ROS_MASTER_URI=http://ros-master-robot:11311
+      - MQTT_BROKER_ADDRESS=tcp://127.0.0.1:1883
+      - CONFIG_FILE=config_robot_turtlesim.yaml
+      - ROBOT_NAME=${ROBOT_NAME}
+    depends_on:
+      - turtlesim-robot
+  turtlesim-robot:
+    image: osrf/ros:noetic-desktop-full
+    stdin_open: true
+    tty: true
+    privileged: true
+    environment:
+      - DISPLAY=$DISPLAY
+      - QT_X11_NO_MITSHM=1
+      - XAUTHORITY=/tmp/.docker.xauth
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
+      - ROS_MASTER_URI=http://ros-master-robot:11311
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - /tmp/.docker.xauth:/tmp/.docker.xauth:rw
+    depends_on:
+      - ros-master-robot
+  ros-master-robot:
+    image: ros:noetic-ros-core
+    tty: true
+    command:
+      - roscore
+  mqtt-ros-server:
+    build:
+      context: .
+      dockerfile: Dockerfile_MQTT_ROS
+    tty: true
+    environment:
+      - ROS_MASTER_URI=http://ros-master-server:11311
+      - MQTT_BROKER_ADDRESS=tcp://127.0.0.1:1883
+      - CONFIG_FILE=config_server_turtlesim.yaml
+      - ROBOT_NAME=${ROBOT_NAME}
+    depends_on:
+      - ros-master-server
+  ros-master-server:
+    image: ros:noetic-ros-core
+    tty: true
+    command:
+      - roscore

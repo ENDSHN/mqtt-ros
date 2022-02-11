@@ -43,6 +43,8 @@ This repository includes a few different docker-compose files. Each of them have
 
 `docker-compose-tb3.yml` is used for the Turtlebot 3 itself and is required to run on a Turtlebot 3 as it is not a simulator.
 
+`docker-compose-turtlesim.yml` is starting a robot and server instance with the ROS Turtlesim application. Before using it it is required to type `xhost +local:root` into the console, then go into the container with the ROS environment for the robot and run `rosrun turtlesim turtlesim_node` which will promptly start the GUI of the Turtlesim.
+
 <br/>
 <div align="right">
     <b><a href="#mqtt-ros">↥ back to top</a></b>

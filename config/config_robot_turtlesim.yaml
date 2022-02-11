@@ -1,0 +1,4 @@
+output_topics: []
+input_topics:
+  - name: "/turtle1/cmd_vel"
+    type: "geometry_msgs/Twist"
