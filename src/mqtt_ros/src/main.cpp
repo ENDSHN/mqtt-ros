@@ -57,6 +57,7 @@ public:
         std::string topic_name = header.at("topic");
         RosMsgParser::ShapeShifter::ConstPtr ros_msg = ros_event.getMessage();
 
+        //Serialize ROS message.
         uint32_t serialization_size = ros_msg->size();
         boost::shared_array<uint8_t> buffer(new uint8_t[serialization_size]);
         ros::serialization::OStream stream(buffer.get(), serialization_size);
@@ -69,6 +70,7 @@ public:
     }
 
     void MQTT_to_ROS(mqtt::const_message_ptr mqtt_msg) {
+        //Get topic and publisher.
         std::string mqtt_topic = mqtt_msg->get_topic();
         std::string topic_name = mqtt_topic.erase(0, robot_name.length());
         ros::Publisher curr_publisher;
@@ -82,6 +84,7 @@ public:
             return;
         }
 
+        //Deserialize message from MQTT and send to ROS.
         RosMsgParser::ShapeShifter ros_msg;
         uint32_t msg_size = mqtt_msg->get_payload().size();
         boost::shared_array<uint8_t> buffer(new uint8_t[msg_size]);

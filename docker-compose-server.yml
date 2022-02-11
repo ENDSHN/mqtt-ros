@@ -4,14 +4,27 @@ services:
     build:
       context: .
       dockerfile: Dockerfile_MQTT_ROS
+    tty: true
     environment:
-      - ROS_MASTER_URI=http://ros-master:11311
+      - ROS_MASTER_URI=http://ros:11311
       - MQTT_BROKER_ADDRESS=tcp://127.0.0.1:1883
       - CONFIG_FILE=config_server.yaml
       - ROBOT_NAME=tb3
     depends_on:
-      - ros-master
-  ros-master:
-    image: ros:noetic-ros-core
+      - ros
+  ros:
+    image: osrf/ros:noetic-desktop-full
     command:
       - roscore
+    stdin_open: true
+    tty: true
+    privileged: true
+    environment:
+      - DISPLAY=$DISPLAY
+      - QT_X11_NO_MITSHM=1
+      - XAUTHORITY=/tmp/.docker.xauth
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - /tmp/.docker.xauth:/tmp/.docker.xauth:rw

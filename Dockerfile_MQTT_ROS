@@ -36,7 +36,10 @@ RUN ldconfig
 
 # Compile everything
 WORKDIR /catkin_ws/
-RUN /bin/bash -c "source /opt/ros/noetic/setup.bash && catkin_make install -j8 -l8 -DCMAKE_INSTALL_PREFIX=/opt/ros/noetic/"
+RUN /bin/bash -c "source /opt/ros/noetic/setup.bash && catkin_make install -j1 -l1 -DCMAKE_INSTALL_PREFIX=/opt/ros/noetic/"
+
+# Normally not necessary but in this case it is so the solution can read tf messages
+RUN apt-get install ros-noetic-tf -y
 
 # Copy the config files into the container
 RUN mkdir -p /catkin_ws/src/mqtt_ros/config/

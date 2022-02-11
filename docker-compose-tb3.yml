@@ -17,6 +17,9 @@ services:
       dockerfile: Dockerfile_Turtlebot
     environment:
       - ROS_MASTER_URI=http://ros-master:11311
+    volumes:
+      - /dev:/dev
+    privileged: true
     depends_on:
       - ros-master
   ros-master:

@@ -5,7 +5,14 @@ FROM ros:noetic-ros-base
 RUN apt-get update && apt-get install --no-install-recommends -y
 
 # Get Turtlebot 3 packages
-RUN apt-get install ros-noetic-dynamixel-sdk ros-noetic-turtlebot3-msgs ros-noetic-turtlebot3 -y
+RUN apt-get install ros-noetic-rosserial-arduino \
+        ros-noetic-turtlebot3-msgs \
+        ros-noetic-laser-proc \
+        ros-noetic-hls-lfcd-lds-driver \
+        ros-noetic-robot-state-publisher \
+        ros-noetic-joint-state-publisher \
+        ros-noetic-xacro \
+        ros-noetic-turtlebot3 -y
 
 # Set environment variables
 ENV TURTLEBOT3_MODEL=burger

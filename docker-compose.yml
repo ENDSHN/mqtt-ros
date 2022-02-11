@@ -4,37 +4,42 @@ services:
     build:
       context: .
       dockerfile: Dockerfile_MQTT_ROS
+    tty: true
     environment:
       - ROS_MASTER_URI=http://ros-master-robot:11311
       - MQTT_BROKER_ADDRESS=tcp://127.0.0.1:1883
       - CONFIG_FILE=config_robot.yaml
-      - ROBOT_NAME=robot0
+      - ROBOT_NAME=${ROBOT_NAME}
     depends_on:
       - turtlebot-sim-robot
   turtlebot-sim-robot:
     build:
       context: .
       dockerfile: Dockerfile_Turtlebot_Sim
+    tty: true
     environment:
       - ROS_MASTER_URI=http://ros-master-robot:11311
     depends_on:
       - ros-master-robot
   ros-master-robot:
     image: ros:noetic-ros-core
+    tty: true
     command:
       - roscore
   mqtt-ros-server:
     build:
       context: .
       dockerfile: Dockerfile_MQTT_ROS
+    tty: true
     environment:
       - ROS_MASTER_URI=http://ros-master-server:11311
       - MQTT_BROKER_ADDRESS=tcp://127.0.0.1:1883
       - CONFIG_FILE=config_server.yaml
-      - ROBOT_NAME=robot0
+      - ROBOT_NAME=${ROBOT_NAME}
     depends_on:
       - ros-master-server
   ros-master-server:
     image: ros:noetic-ros-core
+    tty: true
     command:
       - roscore

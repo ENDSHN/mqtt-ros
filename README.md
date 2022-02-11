@@ -12,7 +12,7 @@ For a basic test the `docker-compose.yml` image can be used. In order to start b
 docker-compose build
 ```
 
-Before testing the image it is required to change the parameter `MQTT_BROKER_ADDRESS` for each of the containers it is used in. This parameter can be found in each of the Docker-Compose files. It has to match the IP address of the MQTT Broker. Optionally the name of the robot can be changed as well by modifying the parameter `ROBOT_NAME`. Make sure that the name will be the same for each component.
+Before testing the image it is required to change the parameter `MQTT_BROKER_ADDRESS` for each of the containers it is used in. This parameter can be found in each of the Docker-Compose files. It has to match the IP address of the MQTT Broker. Optionally the name of the robot can be changed as well by modifying the parameter `ROBOT_NAME`. Make sure that the name will be the same for each component. In it's default state it requires an environment variable called `ROBOT_NAME` to be set, but this can be modified as well.
 
 Additionally a MQTT Broker must be started beforehand. This repository includes an example broker, which uses EMQX. To start it, run:
 ```console
