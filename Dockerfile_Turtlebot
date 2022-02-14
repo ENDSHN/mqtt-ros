@@ -4,6 +4,15 @@ FROM ros:noetic-ros-base
 # Update and install packages
 RUN apt-get update && apt-get install --no-install-recommends -y
 
+# Setup the keys
+RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
+
+# Setup sources.list
+RUN echo "deb http://packages.ros.org/ros/ubuntu focal main" > /etc/apt/sources.list.d/ros1-latest.list
+
+# Update and install packages again with new keys
+RUN apt-get update && apt-get install --no-install-recommends -y
+
 # Get Turtlebot 3 packages
 RUN apt-get install ros-noetic-rosserial-arduino \
         ros-noetic-turtlebot3-msgs \
