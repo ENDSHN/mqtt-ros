@@ -4,6 +4,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile_MQTT_ROS
+    tty: true
     environment:
       - ROS_MASTER_URI=http://ros-master:11311
       - MQTT_BROKER_ADDRESS=tcp://127.0.0.1:1883
