@@ -2,3 +2,6 @@ output_topics: ["/scan", "/odom", "/tf", "/tf_static", "/joint_states"]
 input_topics:
   - name: "/cmd_vel"
     type: "geometry_msgs/Twist"
+debug_topics:
+  - name: "/scan"
+    frequency: 50

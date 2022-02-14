@@ -15,6 +15,18 @@ struct MQTT_to_ROS_Publisher {
     }
 };
 
+struct ROS_Timestamp_Debugger {
+    std::string topic_name;
+    int frequency;
+    int curr_freq;
+
+    ROS_Timestamp_Debugger(std::string name, int freq) {
+        topic_name = name;
+        frequency = std::max(freq, 1);
+        curr_freq = 0;
+    }
+};
+
 class MQTT_ROS {
 public:
     MQTT_ROS() {}
@@ -42,7 +54,10 @@ protected:
     std::vector<ros::Subscriber> stored_subscribers;
 
     //Stores all MQTT topics.
-    std::vector<mqtt::topic_ptr> stored_topics; 
+    std::vector<mqtt::topic_ptr> stored_topics;
+
+    //Stores all ROS timestamp debuggers.
+    std::vector<ROS_Timestamp_Debugger> stored_debuggers;
 
     //The MQTT message pointer.
     mqtt::message_ptr pubmsg;
@@ -56,6 +71,9 @@ public:
         const ros::M_string& header = ros_event.getConnectionHeader();
         std::string topic_name = header.at("topic");
         RosMsgParser::ShapeShifter::ConstPtr ros_msg = ros_event.getMessage();
+
+        //Debug the time if the timestamp is supposed to be debugged for this topic.
+        updateROSDebug(topic_name);
 
         //Serialize ROS message.
         uint32_t serialization_size = ros_msg->size();
@@ -84,6 +102,9 @@ public:
             return;
         }
 
+        //Debug the time if the timestamp is supposed to be debugged for this topic.
+        updateROSDebug(topic_name);
+
         //Deserialize message from MQTT and send to ROS.
         RosMsgParser::ShapeShifter ros_msg;
         uint32_t msg_size = mqtt_msg->get_payload().size();
@@ -94,6 +115,19 @@ public:
         ros::serialization::IStream stream(buffer.get(), msg_size);
         ros::serialization::deserialize(stream, ros_msg);
         curr_publisher.publish(ros_msg);
+    }
+
+    void updateROSDebug(std::string topic_name) {
+        for (int i = 0; i < stored_debuggers.size(); i++) {
+            if (stored_debuggers[i].topic_name == topic_name) {
+                if (stored_debuggers[i].curr_freq == 0) {
+                    std::chrono::milliseconds ms = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
+                    ROS_INFO("Current milliseconds for topic %s: %s", topic_name.c_str(), std::to_string(ms.count()).c_str());
+                }
+                stored_debuggers[i].curr_freq = ((stored_debuggers[i].curr_freq + 1) % stored_debuggers[i].frequency);
+                break;
+            }
+        }
     }
 
     void run() {
@@ -148,6 +182,13 @@ public:
             stored_publishers.push_back(nh.advertise(adv_options));
             mqtt::topic mqttTopic(client, robot_name + pub.topic_name, 0);
             mqttTopic.subscribe(mqtt_sub_options)->wait();
+        }
+
+        //Get timestamp debugger printers.
+        const YAML::Node& ros_timestamp_debuggers = config["debug_topics"];
+        for (auto value : ros_timestamp_debuggers) {
+            ROS_Timestamp_Debugger debugger(value["name"].as<std::string>(), value["frequency"].as<int>());
+            stored_debuggers.push_back(debugger);
         }
 
         //Everything successful.
