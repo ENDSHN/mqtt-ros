@@ -1,0 +1,70 @@
+version: "3.7"
+services:
+  mqtt-ros-robot-1:
+    build:
+      context: .
+      dockerfile: Dockerfile_MQTT_ROS
+    environment:
+      - ROS_MASTER_URI=http://ros-master-robot-1:11311
+      - MQTT_BROKER_ADDRESS=tcp://127.0.0.1:1883
+      - CONFIG_FILE=config_robot.yaml
+      - ROBOT_NAME=${ROBOT_NAME}_1
+    depends_on:
+      - turtlebot-sim-robot-1
+  turtlebot-sim-robot-1:
+    build:
+      context: .
+      dockerfile: Dockerfile_Turtlebot_Sim
+    environment:
+      - ROS_MASTER_URI=http://ros-master-robot-1:11311
+    depends_on:
+      - ros-master-robot-1
+  ros-master-robot-1:
+    image: ros:noetic-ros-core
+    command:
+      - roscore
+  mqtt-ros-server-1:
+    build:
+      context: .
+      dockerfile: Dockerfile_MQTT_ROS
+    environment:
+      - ROS_MASTER_URI=http://ros-master-server-1:11311
+      - MQTT_BROKER_ADDRESS=tcp://127.0.0.1:1883
+      - CONFIG_FILE=config_server.yaml
+      - ROBOT_NAME=${ROBOT_NAME}_1
+    depends_on:
+      - ros-master-server-1
+  ros-master-server-1:
+    image: ros:noetic-ros-core
+    command:
+      - roscore
+  mqtt-ros-robot-2:
+    build:
+      context: .
+      dockerfile: Dockerfile_MQTT_ROS
+    environment:
+      - ROS_MASTER_URI=http://ros-master-robot-2:11311
+      - MQTT_BROKER_ADDRESS=tcp://127.0.0.1:1883
+      - CONFIG_FILE=config_robot.yaml
+      - ROBOT_NAME=${ROBOT_NAME}_2
+    depends_on:
+      - ros-master-robot-2
+  ros-master-robot-2:
+    image: ros:noetic-ros-core
+    command:
+      - roscore
+  mqtt-ros-server-2:
+    build:
+      context: .
+      dockerfile: Dockerfile_MQTT_ROS
+    environment:
+      - ROS_MASTER_URI=http://ros-master-server-2:11311
+      - MQTT_BROKER_ADDRESS=tcp://127.0.0.1:1883
+      - CONFIG_FILE=config_server.yaml
+      - ROBOT_NAME=${ROBOT_NAME}_2
+    depends_on:
+      - ros-master-server-2
+  ros-master-server-2:
+    image: ros:noetic-ros-core
+    command:
+      - roscore

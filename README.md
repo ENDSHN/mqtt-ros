@@ -45,6 +45,8 @@ This repository includes a few different docker-compose files. Each of them have
 
 `docker-compose-turtlesim.yml` is starting a robot and server instance with the ROS Turtlesim application. Before using it it is required to type `xhost +local:root` into the console, then go into the container with the ROS environment for the robot and run `rosrun turtlesim turtlesim_node` which will promptly start the GUI of the Turtlesim.
 
+`docker-compose-multiple.yml` will start 2 different simulated environments while having one of them as a Turtlebot 3 Simulator while the other one does not start a simulated environment.
+
 <br/>
 <div align="right">
     <b><a href="#mqtt-ros">↥ back to top</a></b>

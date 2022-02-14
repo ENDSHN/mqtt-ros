@@ -5,5 +5,5 @@ for i in {1..20}
 do
     export ROBOT_NAME="robot$i"
 
-    docker-compose -p p$i up -d
+    docker-compose -f docker-compose-multiple.yml -p p$i up -d --force-recreate
 done
