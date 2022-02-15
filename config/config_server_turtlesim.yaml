@@ -1,2 +1,3 @@
 output_topics: ["/turtle1/cmd_vel"]
 input_topics:
+debug_topics:

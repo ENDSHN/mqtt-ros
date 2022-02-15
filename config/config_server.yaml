@@ -10,6 +10,8 @@ input_topics:
     type: "tf/tfMessage"
   - name: "/tf_static"
     type: "tf/tfMessage"
+  - name: "/imu"
+    type: "sensor_msgs/Imu"
 debug_topics:
   - name: "/scan"
     frequency: 50

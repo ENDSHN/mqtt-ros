@@ -1,4 +1,4 @@
-output_topics: ["/scan", "/odom", "/tf", "/tf_static", "/joint_states"]
+output_topics: ["/scan", "/odom", "/tf", "/tf_static", "/joint_states",  "/imu"]
 input_topics:
   - name: "/cmd_vel"
     type: "geometry_msgs/Twist"
